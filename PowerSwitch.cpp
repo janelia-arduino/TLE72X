@@ -18,21 +18,21 @@ PowerSwitch::PowerSwitch(const int cs_pin) :
 {
   initialized_ = false;
 
-  pinMode(cs_pin_, OUTPUT);
-  digitalWrite(cs_pin_, HIGH);
+  pinMode(cs_pin_,OUTPUT);
+  digitalWrite(cs_pin_,HIGH);
 }
 
-PowerSwitch::PowerSwitch(const int cs_pin, const int in_pin) :
+PowerSwitch::PowerSwitch(const int cs_pin, const int reset_pin) :
   cs_pin_(cs_pin),
-  in_pin_(in_pin)
+  reset_pin_(reset_pin)
 {
   initialized_ = false;
 
-  pinMode(cs_pin, OUTPUT);
-  digitalWrite(cs_pin, HIGH);
+  pinMode(cs_pin,OUTPUT);
+  digitalWrite(cs_pin,HIGH);
 
-  pinMode(in_pin,OUTPUT);
-  digitalWrite(in_pin, LOW);
+  pinMode(reset_pin,OUTPUT);
+  digitalWrite(reset_pin,HIGH);
 }
 
 void PowerSwitch::setup(const int ic_count, const boolean spi_reset)
@@ -61,7 +61,7 @@ void PowerSwitch::setChannels(uint32_t channels)
   {
     spiBegin();
   }
-  digitalWrite(cs_pin_, LOW);
+  digitalWrite(cs_pin_,LOW);
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
   {
     channels_ = channels;
@@ -70,7 +70,7 @@ void PowerSwitch::setChannels(uint32_t channels)
       SPI.transfer(channels_>>(ic*8));
     }
   }
-  digitalWrite(cs_pin_, HIGH);
+  digitalWrite(cs_pin_,HIGH);
   digitalRead(cs_pin_);
 }
 
@@ -225,6 +225,13 @@ uint32_t PowerSwitch::getChannelsOn()
 int PowerSwitch::getChannelCount()
 {
   return ic_count_*CHANNEL_COUNT_PER_IC;
+}
+
+void PowerSwitch::reset()
+{
+  digitalWrite(reset_pin_,LOW);
+  delay(RESET_DELAY);
+  digitalWrite(reset_pin_,HIGH);
 }
 
 void PowerSwitch::spiBegin()

@@ -6,7 +6,6 @@
 const int BAUDRATE = 9600;
 const int LOOP_DELAY = 1000;
 const int CS_PIN = 49;
-const int IN_PIN = 48;
 const int IC_COUNT = 2;
 // Number of power switch IC chips connected in a daisy chain on the
 // pcb. There are 8 power switch channels per IC.
@@ -18,10 +17,7 @@ const int IC_COUNT = 2;
 const boolean SPI_RESET = false;
 
 // Instantiate PowerSwitch
-PowerSwitch power_switch = PowerSwitch(CS_PIN, IN_PIN);
-// If the IN_PIN is permanently tied to ground instead of an arduino
-// pin you can instantiate it like this instead:
-// PowerSwitch power_switch = PowerSwitch(CS_PIN);
+PowerSwitch power_switch = PowerSwitch(CS_PIN);
 
 int channel_count;
 

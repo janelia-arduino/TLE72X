@@ -21,7 +21,7 @@ class PowerSwitch
 public:
   PowerSwitch();
   PowerSwitch(int cs_pin);
-  PowerSwitch(int cs_pin, int in_pin);
+  PowerSwitch(int cs_pin, int reset_pin);
 
   void setup(int ic_count=1, boolean spi_reset=false);
   void setChannels(uint32_t channels);
@@ -40,6 +40,7 @@ public:
   void setChannelsOffAllOthersOn(uint32_t channels);
   uint32_t getChannelsOn();
   int getChannelCount();
+  void reset();
 
 private:
   const static int IC_COUNT_MIN = 1;
@@ -47,6 +48,8 @@ private:
 
   const static int CHANNEL_COUNT_PER_IC = 8;
   const static int CHANNEL_COUNT_MAX = 32;
+
+  const static int RESET_DELAY = 200;
 
   const static byte CMD_DIAGNOSIS = 0b11<<6;
   const static byte CMD_READ = 0b01<<6;
@@ -62,7 +65,7 @@ private:
   const static byte ADDR_CTL = 0b111;  // Output Control Register
 
   int cs_pin_;
-  int in_pin_;
+  int reset_pin_;
   boolean initialized_;
   uint32_t channels_;
   int ic_count_;
