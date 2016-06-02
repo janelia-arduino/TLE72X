@@ -13,7 +13,6 @@
 #include "WProgram.h"
 #endif
 #include "SPI.h"
-#include <util/atomic.h>
 
 
 class TLE72X
@@ -41,6 +40,8 @@ public:
   uint32_t getChannelsOn();
   int getChannelCount();
   void reset();
+  void setChannelMapTrue(int channel);
+  void setChannelMapFalse(int channel);
 
 private:
   const static int IC_COUNT_MIN = 1;
@@ -56,22 +57,32 @@ private:
   const static byte CMD_RESET = 0b10<<6;
   const static byte CMD_WRITE = 0b11<<6;
 
-  const static byte ADDR_IMCR = 0b001; // Input Mapping Configuration Register
-  const static byte ADDR_BOCR = 0b010; // Boolean Operator Configuration Register
-  const static byte ADDR_OLCR = 0b011; // Over Load Configuration Register
-  const static byte ADDR_OTCR = 0b100; // Over Temperature Configuration Register
-  const static byte ADDR_SRCR = 0b101; // Slew Rate Configuration Register
-  const static byte ADDR_STA = 0b110;  // Output Status Monitor
-  const static byte ADDR_CTL = 0b111;  // Output Control Register
+  const static byte ADDR_MAP = 0b001; // Input Mapping Register
+  const static byte ADDR_BOL = 0b010; // Boolean Operation Register
+  const static byte ADDR_OVL = 0b011; // Overload Behavior Register
+  const static byte ADDR_OVT = 0b100; // Overtemperature Behavior Register
+  const static byte ADDR_SLE = 0b101; // Switching Speed / Slew Rate Register
+  const static byte ADDR_STA = 0b110; // Output State Register
+  const static byte ADDR_CTL = 0b111; // Serial Output Control Register
 
   int cs_pin_;
   int reset_pin_;
   boolean initialized_;
   uint32_t channels_;
+  uint32_t mapped_;
+  uint32_t bool_state_;
   int ic_count_;
   boolean spi_reset_;
 
   void spiBegin();
+  void setChannelsMap(uint32_t channels);
+  void setAllChannelsMapTrue();
+  void setAllChannelsMapFalse();
+  void setChannelsBoolean(uint32_t bool_state);
+  void setChannelBooleanAnd(int channel);
+  void setChannelBooleanOr(int channel);
+  void setAllChannelsBooleanAnd();
+  void setAllChannelsBooleanOr();
 };
 
 #endif
