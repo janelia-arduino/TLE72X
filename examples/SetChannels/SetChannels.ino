@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "SPI.h"
 #include "Streaming.h"
-#include "PowerSwitch.h"
+#include "TLE72X.h"
 
 const int BAUDRATE = 9600;
 const int LOOP_DELAY = 1000;
@@ -16,8 +16,8 @@ const int IC_COUNT = 2;
 // communicating with other SPI devices with different SPI parameters
 const bool SPI_RESET = false;
 
-// Instantiate PowerSwitch
-PowerSwitch power_switch = PowerSwitch(CS_PIN);
+// Instantiate TLE72X
+TLE72X power_switch = TLE72X(CS_PIN);
 
 int channel_count;
 uint32_t channels;

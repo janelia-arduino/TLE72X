@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
-// PowerSwitch.h
+// TLE72X.h
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
 
-#ifndef POWER_SWITCH_H
-#define POWER_SWITCH_H
+#ifndef TLE72X_H
+#define TLE72X_H
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -16,12 +16,12 @@
 #include <util/atomic.h>
 
 
-class PowerSwitch
+class TLE72X
 {
 public:
-  PowerSwitch();
-  PowerSwitch(int cs_pin);
-  PowerSwitch(int cs_pin, int reset_pin);
+  TLE72X();
+  TLE72X(int cs_pin);
+  TLE72X(int cs_pin, int reset_pin);
 
   void setup(int ic_count=1, boolean spi_reset=false);
   void setChannels(uint32_t channels);

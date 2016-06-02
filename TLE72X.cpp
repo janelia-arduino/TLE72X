@@ -1,19 +1,19 @@
 // ----------------------------------------------------------------------------
-// PowerSwitch.cpp
+// TLE72X.cpp
 //
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
 
-#include "PowerSwitch.h"
+#include "TLE72X.h"
 
 
-PowerSwitch::PowerSwitch()
+TLE72X::TLE72X()
 {
   initialized_ = false;
 }
 
-PowerSwitch::PowerSwitch(const int cs_pin) :
+TLE72X::TLE72X(const int cs_pin) :
   cs_pin_(cs_pin)
 {
   initialized_ = false;
@@ -22,7 +22,7 @@ PowerSwitch::PowerSwitch(const int cs_pin) :
   digitalWrite(cs_pin_,HIGH);
 }
 
-PowerSwitch::PowerSwitch(const int cs_pin, const int reset_pin) :
+TLE72X::TLE72X(const int cs_pin, const int reset_pin) :
   cs_pin_(cs_pin),
   reset_pin_(reset_pin)
 {
@@ -35,7 +35,7 @@ PowerSwitch::PowerSwitch(const int cs_pin, const int reset_pin) :
   digitalWrite(reset_pin,HIGH);
 }
 
-void PowerSwitch::setup(const int ic_count, const boolean spi_reset)
+void TLE72X::setup(const int ic_count, const boolean spi_reset)
 {
   spi_reset_ = spi_reset;
   if ((0 < ic_count) && (ic_count <= IC_COUNT_MAX))
@@ -55,7 +55,7 @@ void PowerSwitch::setup(const int ic_count, const boolean spi_reset)
   initialized_ = true;
 }
 
-void PowerSwitch::setChannels(uint32_t channels)
+void TLE72X::setChannels(uint32_t channels)
 {
   if (spi_reset_)
   {
@@ -74,7 +74,7 @@ void PowerSwitch::setChannels(uint32_t channels)
   digitalRead(cs_pin_);
 }
 
-void PowerSwitch::setChannelOn(int channel)
+void TLE72X::setChannelOn(int channel)
 {
   if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
   {
@@ -88,7 +88,7 @@ void PowerSwitch::setChannelOn(int channel)
   }
 }
 
-void PowerSwitch::setChannelOff(int channel)
+void TLE72X::setChannelOff(int channel)
 {
   if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
   {
@@ -102,7 +102,7 @@ void PowerSwitch::setChannelOff(int channel)
   }
 }
 
-void PowerSwitch::setChannelsOn(uint32_t channels)
+void TLE72X::setChannelsOn(uint32_t channels)
 {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
   {
@@ -111,7 +111,7 @@ void PowerSwitch::setChannelsOn(uint32_t channels)
   setChannels(channels_);
 }
 
-void PowerSwitch::setChannelsOff(uint32_t channels)
+void TLE72X::setChannelsOff(uint32_t channels)
 {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
   {
@@ -120,7 +120,7 @@ void PowerSwitch::setChannelsOff(uint32_t channels)
   setChannels(channels_);
 }
 
-void PowerSwitch::toggleChannel(int channel)
+void TLE72X::toggleChannel(int channel)
 {
   if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
   {
@@ -134,7 +134,7 @@ void PowerSwitch::toggleChannel(int channel)
   }
 }
 
-void PowerSwitch::toggleChannels(uint32_t channels)
+void TLE72X::toggleChannels(uint32_t channels)
 {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
   {
@@ -143,7 +143,7 @@ void PowerSwitch::toggleChannels(uint32_t channels)
   setChannels(channels_);
 }
 
-void PowerSwitch::toggleAllChannels()
+void TLE72X::toggleAllChannels()
 {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
   {
@@ -152,7 +152,7 @@ void PowerSwitch::toggleAllChannels()
   setChannels(channels_);
 }
 
-void PowerSwitch::setAllChannelsOn()
+void TLE72X::setAllChannelsOn()
 {
   uint32_t bit = 1;
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
@@ -162,7 +162,7 @@ void PowerSwitch::setAllChannelsOn()
   setChannels(channels_);
 }
 
-void PowerSwitch::setAllChannelsOff()
+void TLE72X::setAllChannelsOff()
 {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
   {
@@ -171,7 +171,7 @@ void PowerSwitch::setAllChannelsOff()
   setChannels(channels_);
 }
 
-void PowerSwitch::setChannelOnAllOthersOff(int channel)
+void TLE72X::setChannelOnAllOthersOff(int channel)
 {
   if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
   {
@@ -185,7 +185,7 @@ void PowerSwitch::setChannelOnAllOthersOff(int channel)
   }
 }
 
-void PowerSwitch::setChannelOffAllOthersOn(int channel)
+void TLE72X::setChannelOffAllOthersOn(int channel)
 {
   if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
   {
@@ -199,7 +199,7 @@ void PowerSwitch::setChannelOffAllOthersOn(int channel)
   }
 }
 
-void PowerSwitch::setChannelsOnAllOthersOff(uint32_t channels)
+void TLE72X::setChannelsOnAllOthersOff(uint32_t channels)
 {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
   {
@@ -208,7 +208,7 @@ void PowerSwitch::setChannelsOnAllOthersOff(uint32_t channels)
   setChannels(channels_);
 }
 
-void PowerSwitch::setChannelsOffAllOthersOn(uint32_t channels)
+void TLE72X::setChannelsOffAllOthersOn(uint32_t channels)
 {
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
   {
@@ -217,24 +217,24 @@ void PowerSwitch::setChannelsOffAllOthersOn(uint32_t channels)
   setChannels(channels_);
 }
 
-uint32_t PowerSwitch::getChannelsOn()
+uint32_t TLE72X::getChannelsOn()
 {
   return channels_;
 }
 
-int PowerSwitch::getChannelCount()
+int TLE72X::getChannelCount()
 {
   return ic_count_*CHANNEL_COUNT_PER_IC;
 }
 
-void PowerSwitch::reset()
+void TLE72X::reset()
 {
   digitalWrite(reset_pin_,LOW);
   delay(RESET_DELAY);
   digitalWrite(reset_pin_,HIGH);
 }
 
-void PowerSwitch::spiBegin()
+void TLE72X::spiBegin()
 {
   SPI.setDataMode(SPI_MODE1);
   SPI.setClockDivider(SPI_CLOCK_DIV4);
