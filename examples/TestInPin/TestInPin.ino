@@ -5,8 +5,8 @@
 
 const int BAUDRATE = 9600;
 const int LOOP_DELAY = 1000;
-const int CS_PIN = 49;
-const int IN_PIN = 48;
+const int CS_PIN = 46;
+const int IN_PIN = 45;
 const int IC_COUNT = 4;
 // IC_COUNT is the number of power switch IC chips connected in a
 // daisy chain on the pcb. There are 8 power switch channels per IC.

@@ -222,14 +222,6 @@ void TLE72X::reset()
   interrupts();
 }
 
-void TLE72X::spiBegin()
-{
-  SPI.setDataMode(SPI_MODE1);
-  SPI.setClockDivider(SPI_CLOCK_DIV4);
-  SPI.setBitOrder(MSBFIRST);
-  SPI.begin();
-}
-
 void TLE72X::setChannelsMap(uint32_t channels)
 {
   if (spi_reset_)
@@ -353,3 +345,12 @@ void TLE72X::setAllChannelsBooleanOr()
   interrupts();
   setChannelsBoolean(bool_state_);
 }
+
+void TLE72X::spiBegin()
+{
+  SPI.setDataMode(SPI_MODE1);
+  SPI.setClockDivider(SPI_CLOCK_DIV4);
+  SPI.setBitOrder(MSBFIRST);
+  SPI.begin();
+}
+

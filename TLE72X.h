@@ -40,8 +40,16 @@ public:
   uint32_t getChannelsOn();
   int getChannelCount();
   void reset();
+  void setChannelsMap(uint32_t channels);
   void setChannelMapTrue(int channel);
   void setChannelMapFalse(int channel);
+  void setAllChannelsMapTrue();
+  void setAllChannelsMapFalse();
+  void setChannelsBoolean(uint32_t bool_state);
+  void setChannelBooleanAnd(int channel);
+  void setChannelBooleanOr(int channel);
+  void setAllChannelsBooleanAnd();
+  void setAllChannelsBooleanOr();
 
 private:
   const static int IC_COUNT_MIN = 1;
@@ -75,14 +83,6 @@ private:
   boolean spi_reset_;
 
   void spiBegin();
-  void setChannelsMap(uint32_t channels);
-  void setAllChannelsMapTrue();
-  void setAllChannelsMapFalse();
-  void setChannelsBoolean(uint32_t bool_state);
-  void setChannelBooleanAnd(int channel);
-  void setChannelBooleanOr(int channel);
-  void setAllChannelsBooleanAnd();
-  void setAllChannelsBooleanOr();
 };
 
 #endif
