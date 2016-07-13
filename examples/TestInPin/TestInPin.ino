@@ -36,26 +36,35 @@ void setup()
   pinMode(IN_PIN,OUTPUT);
   digitalWrite(IN_PIN,LOW);
 
+  power_switch.setAllChannelsOn();
+}
+
+void blinkInPin()
+{
+  for (int i=0; i<4; ++i)
+  {
+    digitalWrite(IN_PIN,LOW);
+    Serial << "IN_PIN LOW " << endl;
+    delay(LOOP_DELAY);
+    digitalWrite(IN_PIN,HIGH);
+    Serial << "IN_PIN HIGH " << endl;
+    delay(2*LOOP_DELAY);
+  }
+}
+void loop()
+{
   for (int channel=0; channel<channel_count; ++channel)
   {
-    if ((channel % 1) == 0)
-    {
-      power_switch.setChannelOn(channel);
-    }
     if ((channel % 2) == 0)
     {
       power_switch.setChannelMapFalse(channel);
     }
   }
+  blinkInPin();
 
-}
+  power_switch.setAllChannelsMapFalse();
+  blinkInPin();
 
-void loop()
-{
-  digitalWrite(IN_PIN,LOW);
-  Serial << "IN_PIN LOW " << endl;
-  delay(LOOP_DELAY);
-  digitalWrite(IN_PIN,HIGH);
-  Serial << "IN_PIN HIGH " << endl;
-  delay(2*LOOP_DELAY);
+  power_switch.setAllChannelsMapTrue();
+  blinkInPin();
 }
