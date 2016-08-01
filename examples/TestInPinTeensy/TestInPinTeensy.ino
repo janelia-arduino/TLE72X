@@ -23,6 +23,7 @@ TLE72X power_switch = TLE72X(CS_PIN);
 int channel_count;
 uint32_t channels;
 uint32_t bit;
+int hold_power = 200;
 
 void setup()
 {
@@ -39,19 +40,24 @@ void setup()
   power_switch.setAllChannelsMapFalse();
   power_switch.setChannelMapTrue(0);
   power_switch.setAllChannelsOn();
+
+  analogWriteFrequency(IN_PIN,187500);
+  analogWriteResolution(8);
 }
 
 void blinkInPin()
 {
   for (int i=0; i<4; ++i)
   {
-    digitalWrite(IN_PIN,LOW);
-    Serial << "IN_PIN LOW " << endl;
+    analogWrite(IN_PIN,0);
+    Serial << "IN_PIN 0 " << endl;
+    // digitalWrite(IN_PIN,LOW);
+    // Serial << "IN_PIN LOW " << endl;
     delay(LOOP_DELAY);
     // digitalWrite(IN_PIN,HIGH);
     // Serial << "IN_PIN HIGH " << endl;
-    // analogWrite(IN_PIN,128);
-    // Serial << "IN_PIN 128 " << endl;
+    analogWrite(IN_PIN,hold_power);
+    Serial << "IN_PIN " << hold_power << endl;
     delay(2*LOOP_DELAY);
   }
 }
