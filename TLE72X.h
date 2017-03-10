@@ -19,35 +19,35 @@ class TLE72X
 {
 public:
   TLE72X();
-  TLE72X(int cs_pin);
-  TLE72X(int cs_pin, int reset_pin);
+  TLE72X(const size_t cs_pin);
+  TLE72X(const size_t cs_pin, const size_t reset_pin);
 
-  void setup(int ic_count=1, boolean spi_reset=false);
-  void setChannels(uint32_t channels);
-  void setChannelOn(int channel);
-  void setChannelOff(int channel);
-  void setChannelsOn(uint32_t channels);
-  void setChannelsOff(uint32_t channels);
-  void toggleChannel(int channel);
-  void toggleChannels(uint32_t channels);
+  void setup(const size_t ic_count=1, const boolean spi_reset=false);
+  void setChannels(const uint32_t channels);
+  void setChannelOn(const size_t channel);
+  void setChannelOff(const size_t channel);
+  void setChannelsOn(const uint32_t channels);
+  void setChannelsOff(const uint32_t channels);
+  void toggleChannel(const size_t channel);
+  void toggleChannels(const uint32_t channels);
   void toggleAllChannels();
   void setAllChannelsOn();
   void setAllChannelsOff();
-  void setChannelOnAllOthersOff(int channel);
-  void setChannelOffAllOthersOn(int channel);
-  void setChannelsOnAllOthersOff(uint32_t channels);
-  void setChannelsOffAllOthersOn(uint32_t channels);
+  void setChannelOnAllOthersOff(const size_t channel);
+  void setChannelOffAllOthersOn(const size_t channel);
+  void setChannelsOnAllOthersOff(const uint32_t channels);
+  void setChannelsOffAllOthersOn(const uint32_t channels);
   uint32_t getChannelsOn();
   int getChannelCount();
   void reset();
-  void setChannelsMap(uint32_t channels);
-  void setChannelMapTrue(int channel);
-  void setChannelMapFalse(int channel);
+  void setChannelsMap(const uint32_t channels);
+  void setChannelMapTrue(const size_t channel);
+  void setChannelMapFalse(const size_t channel);
   void setAllChannelsMapTrue();
   void setAllChannelsMapFalse();
-  void setChannelsBoolean(uint32_t bool_state);
-  void setChannelBooleanAnd(int channel);
-  void setChannelBooleanOr(int channel);
+  void setChannelsBoolean(const uint32_t bool_state);
+  void setChannelBooleanAnd(const size_t channel);
+  void setChannelBooleanOr(const size_t channel);
   void setAllChannelsBooleanAnd();
   void setAllChannelsBooleanOr();
 
