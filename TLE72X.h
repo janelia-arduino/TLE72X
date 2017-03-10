@@ -38,7 +38,7 @@ public:
   void setChannelsOnAllOthersOff(const uint32_t channels);
   void setChannelsOffAllOthersOn(const uint32_t channels);
   uint32_t getChannelsOn();
-  int getChannelCount();
+  size_t getChannelCount();
   void reset();
   void setChannelsMap(const uint32_t channels);
   void setChannelMapTrue(const size_t channel);
@@ -52,13 +52,13 @@ public:
   void setAllChannelsBooleanOr();
 
 private:
-  const static int IC_COUNT_MIN = 1;
-  const static int IC_COUNT_MAX = 4;
+  const static size_t IC_COUNT_MIN = 1;
+  const static size_t IC_COUNT_MAX = 4;
 
-  const static int CHANNEL_COUNT_PER_IC = 8;
-  const static int CHANNEL_COUNT_MAX = 32;
+  const static size_t CHANNEL_COUNT_PER_IC = 8;
+  const static size_t CHANNEL_COUNT_MAX = 32;
 
-  const static int RESET_DELAY = 200;
+  const static size_t RESET_DELAY = 200;
 
   const static byte CMD_DIAGNOSIS = 0b11<<6;
   const static byte CMD_READ = 0b01<<6;
@@ -73,13 +73,13 @@ private:
   const static byte ADDR_STA = 0b110; // Output State Register
   const static byte ADDR_CTL = 0b111; // Serial Output Control Register
 
-  int cs_pin_;
-  int reset_pin_;
+  size_t cs_pin_;
+  size_t reset_pin_;
   boolean initialized_;
   uint32_t channels_;
   uint32_t mapped_;
   uint32_t bool_state_;
-  int ic_count_;
+  size_t ic_count_;
   boolean spi_reset_;
 
   void spiBegin();
