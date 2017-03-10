@@ -74,7 +74,7 @@ void TLE72X::setChannels(const uint32_t channels)
 
 void TLE72X::setChannelOn(const size_t channel)
 {
-  if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
+  if (channel < CHANNEL_COUNT_MAX)
   {
     uint32_t bit = 1;
     bit = bit << channel;
@@ -87,7 +87,7 @@ void TLE72X::setChannelOn(const size_t channel)
 
 void TLE72X::setChannelOff(const size_t channel)
 {
-  if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
+  if (channel < CHANNEL_COUNT_MAX)
   {
     uint32_t bit = 1;
     bit = bit << channel;
@@ -116,7 +116,7 @@ void TLE72X::setChannelsOff(const uint32_t channels)
 
 void TLE72X::toggleChannel(const size_t channel)
 {
-  if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
+  if (channel < CHANNEL_COUNT_MAX)
   {
     uint32_t bit = 1;
     bit = bit << channel;
@@ -162,7 +162,7 @@ void TLE72X::setAllChannelsOff()
 
 void TLE72X::setChannelOnAllOthersOff(const size_t channel)
 {
-  if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
+  if (channel < CHANNEL_COUNT_MAX)
   {
     uint32_t bit = 1;
     bit = bit << channel;
@@ -175,7 +175,7 @@ void TLE72X::setChannelOnAllOthersOff(const size_t channel)
 
 void TLE72X::setChannelOffAllOthersOn(const size_t channel)
 {
-  if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
+  if (channel < CHANNEL_COUNT_MAX)
   {
     uint32_t bit = 1;
     bit = bit << channel;
@@ -243,7 +243,7 @@ void TLE72X::setChannelsMap(const uint32_t channels)
 
 void TLE72X::setChannelMapTrue(const size_t channel)
 {
-  if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
+  if (channel < CHANNEL_COUNT_MAX)
   {
     uint32_t bit = 1;
     bit = bit << channel;
@@ -256,7 +256,7 @@ void TLE72X::setChannelMapTrue(const size_t channel)
 
 void TLE72X::setChannelMapFalse(const size_t channel)
 {
-  if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
+  if (channel < CHANNEL_COUNT_MAX)
   {
     uint32_t bit = 1;
     bit = bit << channel;
@@ -305,7 +305,7 @@ void TLE72X::setChannelsBoolean(const uint32_t bool_state)
 
 void TLE72X::setChannelBooleanAnd(const size_t channel)
 {
-  if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
+  if (channel < CHANNEL_COUNT_MAX)
   {
     uint32_t bit = 1;
     bit = bit << channel;
@@ -318,7 +318,7 @@ void TLE72X::setChannelBooleanAnd(const size_t channel)
 
 void TLE72X::setChannelBooleanOr(const size_t channel)
 {
-  if ((0 <= channel) && (channel < CHANNEL_COUNT_MAX))
+  if (channel < CHANNEL_COUNT_MAX)
   {
     uint32_t bit = 1;
     bit = bit << channel;
