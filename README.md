@@ -1,4 +1,4 @@
-#TLE72X
+# TLE72X
 
 Authors:
 
@@ -21,6 +21,6 @@ capability and additional functions.
 
 [Usage Examples](./examples)
 
-##Install Library Dependencies
+## Install Library Dependencies
 
 [arduino-libraries](https://github.com/janelia-arduino/arduino-libraries)
