@@ -13,32 +13,25 @@ TLE72X::TLE72X()
   initialized_ = false;
 }
 
-TLE72X::TLE72X(const size_t cs_pin) :
-  cs_pin_(cs_pin)
-{
-  initialized_ = false;
-
-  pinMode(cs_pin_,OUTPUT);
-  digitalWrite(cs_pin_,HIGH);
-}
-
-TLE72X::TLE72X(const size_t cs_pin, const size_t reset_pin) :
+TLE72X::TLE72X(const size_t cs_pin, const int reset_pin) :
   cs_pin_(cs_pin),
   reset_pin_(reset_pin)
 {
   initialized_ = false;
 
-  pinMode(cs_pin,OUTPUT);
-  digitalWrite(cs_pin,HIGH);
+  pinMode(cs_pin_,OUTPUT);
+  digitalWrite(cs_pin_,HIGH);
 
-  pinMode(reset_pin,OUTPUT);
-  digitalWrite(reset_pin,HIGH);
+  if (reset_pin_ >= 0)
+  {
+    pinMode(reset_pin_,OUTPUT);
+    digitalWrite(reset_pin_,HIGH);
+  }
 }
 
-void TLE72X::setup(const size_t ic_count, const boolean spi_reset)
+void TLE72X::setup(const size_t ic_count)
 {
-  spi_reset_ = spi_reset;
-  if ((0 < ic_count) && (ic_count <= IC_COUNT_MAX))
+  if (ic_count <= IC_COUNT_MAX)
   {
     ic_count_ = ic_count;
   }
@@ -46,30 +39,37 @@ void TLE72X::setup(const size_t ic_count, const boolean spi_reset)
   {
     ic_count_ = IC_COUNT_MIN;
   }
-  spiBegin();
+  SPI.begin();
   setAllChannelsMapTrue();
   setAllChannelsBooleanAnd();
   setAllChannelsOff();
   initialized_ = true;
 }
 
+void TLE72X::usingInterrupt(const IRQ_NUMBER_t interrupt_number)
+{
+  SPI.usingInterrupt(interrupt_number);
+}
+
+void TLE72X::notUsingInterrupt(const IRQ_NUMBER_t interrupt_number)
+{
+  SPI.notUsingInterrupt(interrupt_number);
+}
+
 void TLE72X::setChannels(const uint32_t channels)
 {
-  if (spi_reset_)
-  {
-    spiBegin();
-  }
+  SPI.beginTransaction(SPISettings(spi_clock_,spi_bit_order_,spi_mode_));
   digitalWrite(cs_pin_,LOW);
   noInterrupts();
   channels_ = channels;
-  for (size_t ic = (ic_count_ - 1); ic >= 0; --ic)
+  interrupts();
+  for (int ic = ((int)ic_count_ - 1); ic >= 0; --ic)
   {
     SPI.transfer(CMD_WRITE + ADDR_CTL);
     SPI.transfer(channels_>>(ic*8));
   }
-  interrupts();
   digitalWrite(cs_pin_,HIGH);
-  digitalRead(cs_pin_);
+  SPI.endTransaction();
 }
 
 void TLE72X::setChannelOn(const size_t channel)
@@ -207,16 +207,19 @@ uint32_t TLE72X::getChannelsOn()
   return channels_;
 }
 
-int TLE72X::getChannelCount()
+size_t TLE72X::getChannelCount()
 {
   return ic_count_*CHANNEL_COUNT_PER_IC;
 }
 
 void TLE72X::reset()
 {
-  digitalWrite(reset_pin_,LOW);
-  delay(RESET_DELAY);
-  digitalWrite(reset_pin_,HIGH);
+  if (reset_pin_ >= 0)
+  {
+    digitalWrite(reset_pin_,LOW);
+    delay(RESET_DELAY);
+    digitalWrite(reset_pin_,HIGH);
+  }
   noInterrupts();
   channels_ = 0;
   interrupts();
@@ -224,21 +227,18 @@ void TLE72X::reset()
 
 void TLE72X::setChannelsMap(const uint32_t channels)
 {
-  if (spi_reset_)
-  {
-    spiBegin();
-  }
+  SPI.beginTransaction(SPISettings(spi_clock_,spi_bit_order_,spi_mode_));
   digitalWrite(cs_pin_,LOW);
   noInterrupts();
   mapped_ = channels;
-  for (size_t ic = (ic_count_ - 1); ic >= 0; --ic)
+  interrupts();
+  for (int ic = ((int)ic_count_ - 1); ic >= 0; --ic)
   {
     SPI.transfer(CMD_WRITE + ADDR_MAP);
     SPI.transfer(mapped_>>(ic*8));
   }
-  interrupts();
   digitalWrite(cs_pin_,HIGH);
-  digitalRead(cs_pin_);
+  SPI.endTransaction();
 }
 
 void TLE72X::setChannelMapTrue(const size_t channel)
@@ -286,21 +286,16 @@ void TLE72X::setAllChannelsMapFalse()
 
 void TLE72X::setChannelsBoolean(const uint32_t bool_state)
 {
-  if (spi_reset_)
-  {
-    spiBegin();
-  }
+  SPI.beginTransaction(SPISettings(spi_clock_,spi_bit_order_,spi_mode_));
   digitalWrite(cs_pin_,LOW);
-  noInterrupts();
   bool_state_ = bool_state;
-  for (size_t ic = (ic_count_ - 1); ic >= 0; --ic)
+  for (int ic = ((int)ic_count_ - 1); ic >= 0; --ic)
   {
     SPI.transfer(CMD_WRITE + ADDR_BOL);
     SPI.transfer(bool_state_>>(ic*8));
   }
-  interrupts();
   digitalWrite(cs_pin_,HIGH);
-  digitalRead(cs_pin_);
+  SPI.endTransaction();
 }
 
 void TLE72X::setChannelBooleanAnd(const size_t channel)
@@ -344,13 +339,5 @@ void TLE72X::setAllChannelsBooleanOr()
   bool_state_ = 0;
   interrupts();
   setChannelsBoolean(bool_state_);
-}
-
-void TLE72X::spiBegin()
-{
-  SPI.setDataMode(SPI_MODE1);
-  SPI.setClockDivider(SPI_CLOCK_DIV4);
-  SPI.setBitOrder(MSBFIRST);
-  SPI.begin();
 }
 

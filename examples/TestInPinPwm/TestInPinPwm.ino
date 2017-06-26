@@ -3,36 +3,29 @@
 #include "Streaming.h"
 #include "TLE72X.h"
 
-const int BAUDRATE = 9600;
-const int LOOP_DELAY = 1000;
-const int CS_PIN = 46;
-const int IN_PIN = 45;
-const int IC_COUNT = 4;
+
+const long BAUDRATE = 115200;
+const size_t LOOP_DELAY = 1000;
+const size_t CS_PIN = 10;
+const size_t IN_PIN = 3;
+const size_t RESET_PIN = 2;
+const size_t IC_COUNT = 1;
 // IC_COUNT is the number of power switch IC chips connected in a
 // daisy chain on the pcb. There are 8 power switch channels per IC.
 
-// Setting SPI_RESET to true causes the SPI parameters to be reset
-// every time before a command is issued over SPI. It could cause
-// slight delays and should only be used when you are also
-// communicating with other SPI devices with different SPI parameters
-const bool SPI_RESET = false;
-
 // Instantiate TLE72X
-TLE72X power_switch = TLE72X(CS_PIN);
+TLE72X power_switch = TLE72X(CS_PIN,RESET_PIN);
 
-int channel_count;
-uint32_t channels;
-uint32_t bit;
-int hold_power = 150;
+int min_power = 0;
+int max_power = 256;
+int hold_power = 50;
 
 void setup()
 {
   // Setup serial communications
   Serial.begin(BAUDRATE);
 
-  power_switch.setup(IC_COUNT,SPI_RESET);
-
-  channel_count = power_switch.getChannelCount();
+  power_switch.setup(IC_COUNT);
 
   pinMode(IN_PIN,OUTPUT);
   digitalWrite(IN_PIN,LOW);
@@ -42,15 +35,15 @@ void setup()
 
 void loop()
 {
-  digitalWrite(IN_PIN,LOW);
+  analogWrite(IN_PIN,min_power);
   Serial << "IN_PIN LOW " << endl;
   delay(LOOP_DELAY);
 
-  digitalWrite(IN_PIN,HIGH);
+  analogWrite(IN_PIN,max_power);
   Serial << "IN_PIN HIGH " << endl;
-  delay(2*LOOP_DELAY);
+  delay(LOOP_DELAY);
 
   analogWrite(IN_PIN,hold_power);
-  Serial << "IN_PIN HOLD " << endl;
+  Serial << "IN_PIN HOLD " << endl << endl;
   delay(2*LOOP_DELAY);
 }

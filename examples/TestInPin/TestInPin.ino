@@ -3,22 +3,18 @@
 #include "Streaming.h"
 #include "TLE72X.h"
 
-const int BAUDRATE = 9600;
-const int LOOP_DELAY = 1000;
-const int CS_PIN = 46;
-const int IN_PIN = 45;
-const int IC_COUNT = 4;
+
+const long BAUDRATE = 115200;
+const size_t LOOP_DELAY = 1000;
+const size_t CS_PIN = 10;
+const size_t IN_PIN = 3;
+const size_t RESET_PIN = 2;
+const size_t IC_COUNT = 1;
 // IC_COUNT is the number of power switch IC chips connected in a
 // daisy chain on the pcb. There are 8 power switch channels per IC.
 
-// Setting SPI_RESET to true causes the SPI parameters to be reset
-// every time before a command is issued over SPI. It could cause
-// slight delays and should only be used when you are also
-// communicating with other SPI devices with different SPI parameters
-const bool SPI_RESET = false;
-
 // Instantiate TLE72X
-TLE72X power_switch = TLE72X(CS_PIN);
+TLE72X power_switch = TLE72X(CS_PIN,RESET_PIN);
 
 int channel_count;
 uint32_t channels;
@@ -29,7 +25,7 @@ void setup()
   // Setup serial communications
   Serial.begin(BAUDRATE);
 
-  power_switch.setup(IC_COUNT,SPI_RESET);
+  power_switch.setup(IC_COUNT);
 
   channel_count = power_switch.getChannelCount();
 

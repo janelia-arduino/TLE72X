@@ -3,54 +3,47 @@
 #include "Streaming.h"
 #include "TLE72X.h"
 
-const int BAUDRATE = 9600;
-const int LOOP_DELAY = 1000;
-const int CS_PIN = 49;
-const int IC_COUNT = 4;
+
+const long BAUDRATE = 115200;
+const size_t LOOP_DELAY = 1000;
+const size_t CS_PIN = 10;
+const size_t ENABLE_PIN = 3;
+const size_t RESET_PIN = 2;
+const size_t IC_COUNT = 1;
 // Number of power switch IC chips connected in a daisy chain on the
 // pcb. There are 8 power switch channels per IC.
 
-// Setting SPI_RESET to true causes the SPI parameters to be reset
-// every time before a command is issued over SPI. It could cause
-// slight delays and should only be used when you are also
-// communicating with other SPI devices with different SPI parameters
-const boolean SPI_RESET = false;
-
 // Instantiate TLE72X
-TLE72X power_switch = TLE72X(CS_PIN);
+TLE72X power_switch = TLE72X(CS_PIN,RESET_PIN);
 
-int channel_count;
+size_t channel_count;
 
 void setup()
 {
   // Setup serial communications
   Serial.begin(BAUDRATE);
 
-  power_switch.setup(IC_COUNT,SPI_RESET);
+  power_switch.setup(IC_COUNT);
+
   channel_count = power_switch.getChannelCount();
+
+  pinMode(ENABLE_PIN,OUTPUT);
+  digitalWrite(ENABLE_PIN,HIGH);
 }
 
 void loop()
 {
-  for (int channel = 0; channel < channel_count; channel++)
+  for (size_t channel = 0; channel < channel_count; ++channel)
   {
-    if (channel%2 == 0)
-    {
-      power_switch.setChannelOn(channel);
-      Serial << "set channel " << channel << " on" << endl;
-    }
-    else
-    {
-      if (channel > 0)
-      {
-        power_switch.setChannelOff(channel-1);
-        Serial << "set channel " << (channel-1) << " off" << endl;
-      }
-      power_switch.setChannelOn(channel);
-      Serial << "set channel " << (channel) << " on" << endl;
-    }
+    power_switch.setChannelOn(channel);
+    Serial << "set channel " << channel << " on" << endl;
+
     delay(LOOP_DELAY);
   }
+
   // Set all channels to off
-  power_switch.setChannels(0);
+  power_switch.setAllChannelsOff();
+  Serial << "set all channels off" << endl << endl;
+
+  delay(LOOP_DELAY);
 }

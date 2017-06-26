@@ -19,10 +19,13 @@ class TLE72X
 {
 public:
   TLE72X();
-  TLE72X(const size_t cs_pin);
-  TLE72X(const size_t cs_pin, const size_t reset_pin);
+  TLE72X(const size_t cs_pin, const int reset_pin=-1);
 
-  void setup(const size_t ic_count=1, const boolean spi_reset=false);
+  void setup(const size_t ic_count=1);
+
+  static void usingInterrupt(const IRQ_NUMBER_t interrupt_number);
+  static void notUsingInterrupt(const IRQ_NUMBER_t interrupt_number);
+
   void setChannels(const uint32_t channels);
   void setChannelOn(const size_t channel);
   void setChannelOff(const size_t channel);
@@ -52,6 +55,9 @@ public:
   void setAllChannelsBooleanOr();
 
 private:
+  const static uint32_t spi_clock_ = 4000000;
+  const static uint8_t spi_bit_order_ = MSBFIRST;
+  const static uint8_t spi_mode_ = SPI_MODE1;
   const static size_t IC_COUNT_MIN = 1;
   const static size_t IC_COUNT_MAX = 4;
 
@@ -74,15 +80,13 @@ private:
   const static byte ADDR_CTL = 0b111; // Serial Output Control Register
 
   size_t cs_pin_;
-  size_t reset_pin_;
+  int reset_pin_;
   boolean initialized_;
   uint32_t channels_;
   uint32_t mapped_;
   uint32_t bool_state_;
   size_t ic_count_;
-  boolean spi_reset_;
 
-  void spiBegin();
 };
 
 #endif
