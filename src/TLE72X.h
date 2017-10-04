@@ -7,12 +7,8 @@
 
 #ifndef TLE72X_H
 #define TLE72X_H
-#if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-#include "SPI.h"
+#include <Arduino.h>
+#include <SPI.h>
 
 
 class TLE72X

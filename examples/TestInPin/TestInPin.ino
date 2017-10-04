@@ -1,7 +1,7 @@
-#include "Arduino.h"
-#include "SPI.h"
-#include "Streaming.h"
-#include "TLE72X.h"
+#include <Arduino.h>
+#include <SPI.h>
+#include <Streaming.h>
+#include <TLE72X.h>
 
 
 const long BAUDRATE = 115200;

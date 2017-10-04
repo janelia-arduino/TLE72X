@@ -4,7 +4,6 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-
 #include "TLE72X.h"
 
 
@@ -340,4 +339,3 @@ void TLE72X::setAllChannelsBooleanOr()
   interrupts();
   setChannelsBoolean(bool_state_);
 }
-
