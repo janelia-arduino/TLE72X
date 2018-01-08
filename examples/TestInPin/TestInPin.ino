@@ -4,7 +4,7 @@
 #include <TLE72X.h>
 
 
-const long BAUDRATE = 115200;
+const long BAUD = 115200;
 const size_t LOOP_DELAY = 1000;
 const size_t CS_PIN = 10;
 const size_t IN_PIN = 3;
@@ -23,7 +23,7 @@ uint32_t bit;
 void setup()
 {
   // Setup serial communications
-  Serial.begin(BAUDRATE);
+  Serial.begin(BAUD);
 
   power_switch.setup(IC_COUNT);
 
