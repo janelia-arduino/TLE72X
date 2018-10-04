@@ -30,7 +30,7 @@ TLE72X::TLE72X(const size_t cs_pin, const int reset_pin) :
 
 void TLE72X::setup(const size_t ic_count)
 {
-  if (ic_count <= IC_COUNT_MAX)
+  if ((ic_count >= IC_COUNT_MIN) && (ic_count <= IC_COUNT_MAX))
   {
     ic_count_ = ic_count;
   }
