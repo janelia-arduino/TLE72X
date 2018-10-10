@@ -3,8 +3,12 @@
 #+EMAIL: peterpolidoro@gmail.com
 
 * Library Information
-  - Author :: Peter Polidoro
+  - Name :: TLE72X
+  - Version :: 1.0.1
   - License :: BSD
+  - URL :: https://github.com/janelia-arduino/TLE72X
+  - Author :: Peter Polidoro
+  - Email :: peterpolidoro@gmail.com
 
   SPIDER products are high integrated multichannel SPI driver for small
   current loads, such as relays & solenoids, LED’s, small bulbs and
@@ -12,9 +16,9 @@
   and industrial applications with dedicated feature sets. Modularity
   within the families eliminates redesign costs as far as possible.
 
-  The SPIDER family (TLE72x) consists of 4 and 8 channel low-side and 8
-  channel low-side/ high-side drivers with 2 configurable channels. The
-  products are scalable across the number of PWM inputs, current
+  The SPIDER family (TLE7230R, TLE7233EM, TLE7244SL) consists of 4 and 8 channel
+  low-side and 8 channel low-side/ high-side drivers with 2 configurable
+  channels. The products are scalable across the number of PWM inputs, current
   capability and additional functions.
 
 * Library Examples

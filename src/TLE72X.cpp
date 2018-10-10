@@ -12,14 +12,15 @@ TLE72X::TLE72X()
   initialized_ = false;
 }
 
-TLE72X::TLE72X(const size_t cs_pin, const int reset_pin) :
-  cs_pin_(cs_pin),
-  reset_pin_(reset_pin)
+TLE72X::TLE72X(size_t chip_select_pin,
+               int reset_pin) :
+chip_select_pin_(chip_select_pin),
+reset_pin_(reset_pin)
 {
   initialized_ = false;
 
-  pinMode(cs_pin_,OUTPUT);
-  digitalWrite(cs_pin_,HIGH);
+  pinMode(chip_select_pin_,OUTPUT);
+  digitalWrite(chip_select_pin_,HIGH);
 
   if (reset_pin_ >= 0)
   {
@@ -28,15 +29,15 @@ TLE72X::TLE72X(const size_t cs_pin, const int reset_pin) :
   }
 }
 
-void TLE72X::setup(const size_t ic_count)
+void TLE72X::setup(size_t chip_count)
 {
-  if ((ic_count >= IC_COUNT_MIN) && (ic_count <= IC_COUNT_MAX))
+  if ((chip_count >= CHIP_COUNT_MIN) && (chip_count <= CHIP_COUNT_MAX))
   {
-    ic_count_ = ic_count;
+    chip_count_ = chip_count;
   }
   else
   {
-    ic_count_ = IC_COUNT_MIN;
+    chip_count_ = CHIP_COUNT_MIN;
   }
   SPI.begin();
   setAllChannelsMapTrue();
@@ -45,33 +46,31 @@ void TLE72X::setup(const size_t ic_count)
   initialized_ = true;
 }
 
-void TLE72X::usingInterrupt(const IRQ_NUMBER_t interrupt_number)
+void TLE72X::usingInterrupt(IRQ_NUMBER_t interrupt_number)
 {
   SPI.usingInterrupt(interrupt_number);
 }
 
-void TLE72X::notUsingInterrupt(const IRQ_NUMBER_t interrupt_number)
+void TLE72X::notUsingInterrupt(IRQ_NUMBER_t interrupt_number)
 {
   SPI.notUsingInterrupt(interrupt_number);
 }
 
-void TLE72X::setChannels(const uint32_t channels)
+void TLE72X::setChannels(uint32_t channels)
 {
-  SPI.beginTransaction(SPISettings(spi_clock_,spi_bit_order_,spi_mode_));
-  digitalWrite(cs_pin_,LOW);
+  spiBeginTransaction();
   noInterrupts();
   channels_ = channels;
   interrupts();
-  for (int ic = ((int)ic_count_ - 1); ic >= 0; --ic)
+  for (int ic = ((int)chip_count_ - 1); ic >= 0; --ic)
   {
     SPI.transfer(CMD_WRITE + ADDR_CTL);
     SPI.transfer(channels_>>(ic*8));
   }
-  digitalWrite(cs_pin_,HIGH);
-  SPI.endTransaction();
+  spiEndTransaction();
 }
 
-void TLE72X::setChannelOn(const size_t channel)
+void TLE72X::setChannelOn(size_t channel)
 {
   if (channel < CHANNEL_COUNT_MAX)
   {
@@ -84,7 +83,7 @@ void TLE72X::setChannelOn(const size_t channel)
   }
 }
 
-void TLE72X::setChannelOff(const size_t channel)
+void TLE72X::setChannelOff(size_t channel)
 {
   if (channel < CHANNEL_COUNT_MAX)
   {
@@ -97,7 +96,7 @@ void TLE72X::setChannelOff(const size_t channel)
   }
 }
 
-void TLE72X::setChannelsOn(const uint32_t channels)
+void TLE72X::setChannelsOn(uint32_t channels)
 {
   noInterrupts();
   channels_ |= channels;
@@ -105,7 +104,7 @@ void TLE72X::setChannelsOn(const uint32_t channels)
   setChannels(channels_);
 }
 
-void TLE72X::setChannelsOff(const uint32_t channels)
+void TLE72X::setChannelsOff(uint32_t channels)
 {
   noInterrupts();
   channels_ &= ~channels;
@@ -113,7 +112,7 @@ void TLE72X::setChannelsOff(const uint32_t channels)
   setChannels(channels_);
 }
 
-void TLE72X::toggleChannel(const size_t channel)
+void TLE72X::toggleChannel(size_t channel)
 {
   if (channel < CHANNEL_COUNT_MAX)
   {
@@ -126,7 +125,7 @@ void TLE72X::toggleChannel(const size_t channel)
   }
 }
 
-void TLE72X::toggleChannels(const uint32_t channels)
+void TLE72X::toggleChannels(uint32_t channels)
 {
   noInterrupts();
   channels_ ^= channels;
@@ -159,7 +158,7 @@ void TLE72X::setAllChannelsOff()
   setChannels(channels_);
 }
 
-void TLE72X::setChannelOnAllOthersOff(const size_t channel)
+void TLE72X::setChannelOnAllOthersOff(size_t channel)
 {
   if (channel < CHANNEL_COUNT_MAX)
   {
@@ -172,7 +171,7 @@ void TLE72X::setChannelOnAllOthersOff(const size_t channel)
   }
 }
 
-void TLE72X::setChannelOffAllOthersOn(const size_t channel)
+void TLE72X::setChannelOffAllOthersOn(size_t channel)
 {
   if (channel < CHANNEL_COUNT_MAX)
   {
@@ -185,7 +184,7 @@ void TLE72X::setChannelOffAllOthersOn(const size_t channel)
   }
 }
 
-void TLE72X::setChannelsOnAllOthersOff(const uint32_t channels)
+void TLE72X::setChannelsOnAllOthersOff(uint32_t channels)
 {
   noInterrupts();
   channels_ = channels;
@@ -193,7 +192,7 @@ void TLE72X::setChannelsOnAllOthersOff(const uint32_t channels)
   setChannels(channels_);
 }
 
-void TLE72X::setChannelsOffAllOthersOn(const uint32_t channels)
+void TLE72X::setChannelsOffAllOthersOn(uint32_t channels)
 {
   noInterrupts();
   channels_ = ~channels;
@@ -208,7 +207,7 @@ uint32_t TLE72X::getChannelsOn()
 
 size_t TLE72X::getChannelCount()
 {
-  return ic_count_*CHANNEL_COUNT_PER_IC;
+  return chip_count_*CHANNEL_COUNT_PER_IC;
 }
 
 void TLE72X::reset()
@@ -224,23 +223,21 @@ void TLE72X::reset()
   interrupts();
 }
 
-void TLE72X::setChannelsMap(const uint32_t channels)
+void TLE72X::setChannelsMap(uint32_t channels)
 {
-  SPI.beginTransaction(SPISettings(spi_clock_,spi_bit_order_,spi_mode_));
-  digitalWrite(cs_pin_,LOW);
+  spiBeginTransaction();
   noInterrupts();
   mapped_ = channels;
   interrupts();
-  for (int ic = ((int)ic_count_ - 1); ic >= 0; --ic)
+  for (int ic = ((int)chip_count_ - 1); ic >= 0; --ic)
   {
     SPI.transfer(CMD_WRITE + ADDR_MAP);
     SPI.transfer(mapped_>>(ic*8));
   }
-  digitalWrite(cs_pin_,HIGH);
-  SPI.endTransaction();
+  spiEndTransaction();
 }
 
-void TLE72X::setChannelMapTrue(const size_t channel)
+void TLE72X::setChannelMapTrue(size_t channel)
 {
   if (channel < CHANNEL_COUNT_MAX)
   {
@@ -253,7 +250,7 @@ void TLE72X::setChannelMapTrue(const size_t channel)
   }
 }
 
-void TLE72X::setChannelMapFalse(const size_t channel)
+void TLE72X::setChannelMapFalse(size_t channel)
 {
   if (channel < CHANNEL_COUNT_MAX)
   {
@@ -283,21 +280,19 @@ void TLE72X::setAllChannelsMapFalse()
   setChannelsMap(mapped_);
 }
 
-void TLE72X::setChannelsBoolean(const uint32_t bool_state)
+void TLE72X::setChannelsBoolean(uint32_t bool_state)
 {
-  SPI.beginTransaction(SPISettings(spi_clock_,spi_bit_order_,spi_mode_));
-  digitalWrite(cs_pin_,LOW);
+  spiBeginTransaction();
   bool_state_ = bool_state;
-  for (int ic = ((int)ic_count_ - 1); ic >= 0; --ic)
+  for (int ic = ((int)chip_count_ - 1); ic >= 0; --ic)
   {
     SPI.transfer(CMD_WRITE + ADDR_BOL);
     SPI.transfer(bool_state_>>(ic*8));
   }
-  digitalWrite(cs_pin_,HIGH);
-  SPI.endTransaction();
+  spiEndTransaction();
 }
 
-void TLE72X::setChannelBooleanAnd(const size_t channel)
+void TLE72X::setChannelBooleanAnd(size_t channel)
 {
   if (channel < CHANNEL_COUNT_MAX)
   {
@@ -310,7 +305,7 @@ void TLE72X::setChannelBooleanAnd(const size_t channel)
   }
 }
 
-void TLE72X::setChannelBooleanOr(const size_t channel)
+void TLE72X::setChannelBooleanOr(size_t channel)
 {
   if (channel < CHANNEL_COUNT_MAX)
   {
@@ -338,4 +333,26 @@ void TLE72X::setAllChannelsBooleanOr()
   bool_state_ = 0;
   interrupts();
   setChannelsBoolean(bool_state_);
+}
+
+void TLE72X::enableClockSelect()
+{
+  digitalWrite(chip_select_pin_,LOW);
+}
+
+void TLE72X::disableClockSelect()
+{
+  digitalWrite(chip_select_pin_,HIGH);
+}
+
+void TLE72X::spiBeginTransaction()
+{
+  SPI.beginTransaction(SPISettings(SPI_CLOCK,SPI_BIT_ORDER,SPI_MODE));
+  enableClockSelect();
+}
+
+void TLE72X::spiEndTransaction()
+{
+  disableClockSelect();
+  SPI.endTransaction();
 }
