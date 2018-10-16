@@ -13,7 +13,7 @@ TLE72X::TLE72X()
 }
 
 TLE72X::TLE72X(size_t chip_select_pin,
-               int reset_pin) :
+  int reset_pin) :
 chip_select_pin_(chip_select_pin),
 reset_pin_(reset_pin)
 {

@@ -16,7 +16,7 @@ class TLE72X
 public:
   TLE72X();
   TLE72X(size_t chip_select_pin,
-         int reset_pin=-1);
+    int reset_pin=-1);
 
   void setup(size_t chip_count=1);
 
