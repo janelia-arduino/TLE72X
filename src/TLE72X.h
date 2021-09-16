@@ -2,7 +2,7 @@
 // TLE72X.h
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 
 #ifndef TLE72X_H

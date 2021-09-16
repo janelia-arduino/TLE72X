@@ -2,7 +2,7 @@
 // TLE72X.cpp
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #include "TLE72X.h"
 

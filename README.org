@@ -1,6 +1,6 @@
 #+TITLE: TLE72X
 #+AUTHOR: Peter Polidoro
-#+EMAIL: peterpolidoro@gmail.com
+#+EMAIL: peter@polidoro.io
 
 * Library Information
   - Name :: TLE72X
@@ -8,7 +8,7 @@
   - License :: BSD
   - URL :: https://github.com/janelia-arduino/TLE72X
   - Author :: Peter Polidoro
-  - Email :: peterpolidoro@gmail.com
+  - Email :: peter@polidoro.io
 
   SPIDER products are high integrated multichannel SPI driver for small
   current loads, such as relays & solenoids, LED’s, small bulbs and
